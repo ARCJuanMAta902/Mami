@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Tarjeta Sobre para Mamá - Te Amo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #fdeff2 0%, #f8e0e8 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Quicksand', sans-serif;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Corazones flotantes */
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .heart {
+            position: absolute;
+            color: #ffb7c5;
+            font-size: 1.2rem;
+            opacity: 0.6;
+            animation: floatUp 8s infinite ease-in;
+            bottom: -50px;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.6; }
+            100% { transform: translateY(-110vh) rotate(20deg); opacity: 0; }
+        }
+
+        /* Contenedor del sobre */
+        .envelope-wrapper {
+            perspective: 1500px;
+            width: 100%;
+            max-width: 580px;
+            cursor: pointer;
+            z-index: 2;
+            position: relative;
+        }
+
+        /* El sobre contenedor principal */
+        .envelope {
+            background: #ffefc0;
+            border-radius: 12px 12px 20px 20px;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .envelope:hover {
+            transform: scale(1.01);
+        }
+
+        /* Tapa del sobre (triangular) */
+        .envelope-flap {
+            background: #fdd998;
+            height: 130px;
+            width: 100%;
+            clip-path: polygon(0% 0%, 100% 0%, 50% 50%);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            transform-origin: top;
+            position: relative;
+            top: 0;
+            z-index: 3;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* Cuerpo del sobre (frente sellado) */
+        .envelope-body {
+            background: #ffefc0;
+            padding: 30px 25px 35px;
+            border-radius: 0 0 20px 20px;
+            border-top: 2px dashed #f7cf8c;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .seal {
+            font-size: 2.2rem;
+            color: #d4506e;
+            margin-bottom: 12px;
+        }
+
+        .open-instruction {
+            font-size: 0.9rem;
+            color: #b35f7a;
+            background: #fff0e0;
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-weight: 600;
+        }
+
+        /* --- Tarjeta interna (que se despliega al hacer click) --- */
+        .card-inside {
+            background: #fffcf5;
+            margin-top: 20px;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.8s ease-out, opacity 0.6s ease, margin 0.4s;
+            margin-bottom: 0;
+            pointer-events: none;
+        }
+
+        .card-inside.open {
+            max-height: 800px;
+            opacity: 1;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            pointer-events: auto;
+        }
+
+        /* Contenido de la tarjeta */
+        .inner-message {
+            padding: 30px 28px;
+            background: #fffffa;
+            border-radius: 28px;
+            border: 1px solid #ffd9e4;
+        }
+
+        .greeting {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #b54166;
+            font-family: 'Dancing Script', cursive;
+            border-left: 6px solid #ff95af;
+            padding-left: 18px;
+            margin-bottom: 25px;
+        }
+
+        .main-message {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #3e2c32;
+            background: #fff8f0;
+            padding: 20px;
+            border-radius: 35px;
+            margin-bottom: 25px;
+        }
+
+        .main-message p {
+            margin-bottom: 16px;
+        }
+
+        .signature {
+            text-align: right;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.9rem;
+            font-weight: 600;
+            color: #c95174;
+            border-top: 2px dashed #ffe0e8;
+            padding-top: 20px;
+            display: flex;
+            align-items: baseline;
+            justify-content: flex-end;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .signature span:first-child {
+            font-size: 1rem;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 500;
+        }
+
+        .signature .name {
+            font-size: 2rem;
+        }
+
+        /* pie de flores */
+        .footer-note {
+            background: #fef3e8;
+            padding: 12px;
+            text-align: center;
+            border-radius: 0 0 28px 28px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            font-size: 0.75rem;
+            color: #c46b86;
+        }
+
+        .footer-note i {
+            font-size: 1.2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 550px) {
+            .inner-message {
+                padding: 22px 18px;
+            }
+            .greeting {
+                font-size: 1.4rem;
+            }
+            .signature .name {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="floating-hearts" id="floatingHearts"></div>
+
+<div class="envelope-wrapper" id="envelopeWrapper">
+    <div class="envelope" id="envelope">
+        <div class="envelope-flap" id="envelopeFlap"></div>
+        <div class="envelope-body" id="envelopeBody">
+            <div class="seal">
+                <i class="fas fa-heart"></i> <i class="fas fa-envelope"></i> <i class="fas fa-heart"></i>
+            </div>
+            <p class="open-instruction">
+                ✨  Cartita de  Amor ✨
+            </p>
+            <i class="fas fa-arrow-down" style="color: #d4506e; margin-top: 8px; display: inline-block;"></i>
+        </div>
+
+        <!-- Tarjeta interna oculta que se despliega -->
+        <div class="card-inside" id="cardInside">
+            <div class="inner-message">
+                <div class="greeting">
+                    🌷 Para mi hermosa mamá 🌷
+                </div>
+                <div class="main-message">
+                    <p><strong>Mami te amo</strong>, quiero felicitarte este día, porque eres la mejor madre del mundo. 💖</p>
+                    <p>Me has dado mucho cariño y amor, y yo con esta tarjeta quiero darte un poquito de eso a ti, mami.</p>
+                    <p>Gracias por cada abrazo, por cada sonrisa, por siempre estar. Eres mi luz y mi mayor bendición. 🌸</p>
+                    <p>Que este día te llene de alegría, como tú llenas mis días de amor y cariño. ¡Feliz Día de la Madre!</p>
+                </div>
+                <div class="signature">
+                    <span>Con todo mi corazón,</span>
+                    <span class="name">tu Copito</span>
+                    <i class="fas fa-feather-alt"></i>
+                </div>
+            </div>
+            <div class="footer-note">
+                <i class="fas fa-heart" style="color:#ed7a9e;"></i>
+                <span>Te amo infinito 💕</span>
+                <i class="fas fa-star"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Corazones flotantes dinámicos
+    function createFloatingHeart() {
+        const heartContainer = document.getElementById('floatingHearts');
+        if (!heartContainer) return;
+        const heartEl = document.createElement('i');
+        heartEl.classList.add('fas', 'fa-heart', 'heart');
+        const size = Math.random() * 20 + 14;
+        heartEl.style.fontSize = size + 'px';
+        heartEl.style.left = Math.random() * 100 + '%';
+        heartEl.style.animationDuration = Math.random() * 6 + 5 + 's';
+        heartEl.style.animationDelay = Math.random() * 5 + 's';
+        heartEl.style.opacity = Math.random() * 0.5 + 0.3;
+        heartContainer.appendChild(heartEl);
+        setTimeout(() => heartEl.remove(), 11000);
+    }
+
+    let heartInterval = setInterval(createFloatingHeart, 700);
+    window.addEventListener('beforeunload', () => {
+        if (heartInterval) clearInterval(heartInterval);
+    });
+
+    // Lógica para "abrir" el sobre como si fuera una carta
+    const envelopeWrapper = document.getElementById('envelopeWrapper');
+    const cardInside = document.getElementById('cardInside');
+    const envelopeFlap = document.getElementById('envelopeFlap');
+    const envelopeBody = document.getElementById('envelopeBody');
+
+    let isOpen = false;
+
+    function openEnvelope() {
+        if (isOpen) return;
+        isOpen = true;
+        
+        // Animación de la tapa: inclinar hacia adelante y desaparecer suavemente
+        if (envelopeFlap) {
+            envelopeFlap.style.transform = 'rotateX(180deg)';
+            envelopeFlap.style.transition = 'transform 0.5s ease';
+            envelopeFlap.style.opacity = '0';
+            setTimeout(() => {
+                if (envelopeFlap) envelopeFlap.style.visibility = 'hidden';
+            }, 500);
+        }
+        
+        // Mostrar tarjeta con efecto despliegue
+        cardInside.classList.add('open');
+        
+        // Pequeño cambio opcional en el sello inferior
+        const sealDiv = envelopeBody?.querySelector('.seal');
+        if (sealDiv) {
+            sealDiv.style.opacity = '0.7';
+        }
+        // Cambiar texto de instrucción
+        const instruction = envelopeBody?.querySelector('.open-instruction');
+        if (instruction) {
+            instruction.innerHTML = '💌 ¡Ya abriste la cartita! 💌';
+        }
+    }
+
+    // Al hacer click sobre el sobre (se puede tocar en cualquier parte del sobre)
+    envelopeWrapper.addEventListener('click', (e) => {
+        // Evita que si se hizo clic dentro de la tarjeta abierta, vuelva a dispararse
+        if (!isOpen) {
+            openEnvelope();
+        }
+        e.stopPropagation();
+    });
+
+    // Estilos adicionales para la tapa en 3D
+    const style = document.createElement('style');
+    style.textContent = `
+        .envelope-flap {
+            transition: transform 0.5s ease, opacity 0.4s;
+            transform-origin: top;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .card-inside {
+            transition: max-height 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1), opacity 0.5s ease, margin 0.3s;
+        }
+        .envelope-wrapper {
+            cursor: pointer;
+        }
+        .seal i {
+            animation: pulseSeal 1.8s infinite;
+        }
+        @keyframes pulseSeal {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.08); opacity: 1; text-shadow: 0 0 3px #ffafc0; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+        @keyframes bounceSoft {
+            0%,100%{ transform: translateY(0);}
+            50%{ transform: translateY(-3px);}
+        }
+        .fa-arrow-down {
+            animation: bounceSoft 1.2s infinite;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Si se quiere abrir automáticamente con una pequeña ayuda visual, 
+    // pero lo dejamos manual para la experiencia de sobre. 
+    // Opción: si se ve en móvil, se puede abrir con clic.
+    // Todo listo
+</script>
+</body>
+</html>
